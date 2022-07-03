@@ -1,4 +1,4 @@
-# Rick and Morty API
+# Photo of rovers
 
 [DEMO LINK](https://anastasiia-svintsova.github.io/mars_photos/)
 
