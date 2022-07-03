@@ -1,20 +1,18 @@
 import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   SelectChangeEvent,
-  Alert,
   Box,
   CircularProgress,
+  Container,
+  Grid,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getRovers } from "../../../api/api";
 import { Rover } from "../../../types/Rover";
-import { RoverInfo } from "../../RoverInfo";
+import { RoverInfo } from "../../Rover/RoverInfo";
+import { RoverSelector } from "../../Rover/RoverSelector";
+import { ErrorAlert } from "../../Unknown/ErrorAlert";
 
 export const HomePage = () => {
-  const [currentRoverName, setCurrentRoverName] = useState('');
   const [currentRover, setCurrentRover] = useState<Rover | null>(null);
   const [rovers, setRovers] = useState<Rover[]>([]);
   const [isRoversLoading, setIsRoversLoading] = useState(false);
@@ -40,9 +38,6 @@ export const HomePage = () => {
     if (rover) {
       setCurrentRover(rover);
     };
-
-    setCurrentRoverName(value);
-
   };
 
   useEffect(() => {
@@ -50,36 +45,52 @@ export const HomePage = () => {
   }, []);
 
   return (
-    <div>
-      {isRoversLoading ? (
-        <Box display="flex" justifyContent="center">
-          <CircularProgress />
-        </Box>
-      ) : (
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Rovers</InputLabel>
+    <Grid container flexGrow={1}>
+      <Grid
+        item
+        lg={3}
+        md={3}
+        sm={4}
+        display={{ xs: 'none', sm: 'block' }}
+        borderRight={1}
+        boxShadow={4}
+      >
+        {isRoversLoading && (
+          <Box display="flex" justifyContent="center">
+            <CircularProgress />
+          </Box>
+        )}
 
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={currentRoverName}
-            label="Rovers"
-            onChange={handleRoverChange}
-          >
-            {rovers.map(rover => (
-              <MenuItem key={rover.id} value={rover.name}>
-                {rover.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      )}
+        {!!rovers.length && (
+          <Container sx={{ mt: 3 }}>
+            <RoverSelector
+              rovers={rovers}
+              currentRover={currentRover}
+              onRoverChange={handleRoverChange}
+            />
+          </Container>
+        )}
+      </Grid>
 
-      {error && (
-        <Alert severity="error">Something went wrong, try reloading the page</Alert>
-      )}
+      <Grid item xs={12} display={{ sm: 'none' }} flexGrow={1}>
+        {!!rovers.length && (
+          <Container sx={{ mt: 3 }}>
+            <RoverSelector
+              rovers={rovers}
+              currentRover={currentRover}
+              onRoverChange={handleRoverChange}
+            />
+          </Container>
+        )}
+      </Grid>
 
-      {currentRover && <RoverInfo rover={currentRover} />}
-    </div>
-  )
-}
+      <Grid item sm={8} md={9} flexGrow={1}>
+        <Container sx={{ mt: 3 }}>
+          {currentRover && !error && <RoverInfo rover={currentRover} />}
+        </Container>
+      </Grid>
+
+      <ErrorAlert error={error} />
+    </Grid>
+  );
+};
