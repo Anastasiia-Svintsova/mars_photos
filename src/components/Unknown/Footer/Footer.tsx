@@ -6,7 +6,8 @@ export const Footer = () => (
     <Toolbar sx={{ display: 'flex', justifyContent: 'center' }}>
       <Typography
         component="a"
-        href='/'
+        target="_blank"
+        href='https://github.com/Anastasiia-Svintsova/mars_photos'
         sx={{ textDecoration: 'none' }}
         color="#fff"
         textAlign="center"
